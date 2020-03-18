@@ -7,8 +7,7 @@ import './styles.css';
 
 export default function Join() {
   const [username, setUsername] = useState('');
-  const [room, setRoom] = useState('');
-
+  const [room, setRoom] = useState('1');
   return (
     <div className='joinOuterContainer'>
       <div className='joinInnerContainer'>
@@ -29,23 +28,25 @@ export default function Join() {
           </div>
           <div>
             <label htmlFor='room'>Room</label>
-            <input
-              type='text'
-              placeholde='Room'
+            <select
               className='joinInput'
+              value={room}
               onChange={event => {
                 setRoom(event.target.value);
               }}
-            />
+            >
+              <option value='1'>1</option>
+              <option value='2'>2</option>
+              <option value='3'>3</option>
+              <option value='4'>4</option>
+            </select>
           </div>
           <Link
-            onClick={event =>
-              !username || !room ? event.preventDefault() : null
-            }
+            onClick={event => (!username ? event.preventDefault() : null)}
             to={`/chat?username=${username}&room=${room}`}
           >
-            <button type='submit' className='button mt-20'>
-              Join Chat
+            <button type='submit' className='button'>
+              Chat
             </button>
           </Link>
         </h1>

@@ -2,10 +2,17 @@ const express = require('express');
 const socketio = require('socket.io');
 const http = require('http');
 const cors = require('cors');
+const router = require('./routes');
 
 require('./database');
 
-const router = require('./routes');
+// Room and USer Controller
+const {
+  addUser,
+  getUsersInRoom,
+  removeUser,
+  getUser,
+} = require('./app/controllers/ChatUsersController');
 
 // --> GLOBALS <--
 const PORT = process.env.PORT || 3333;
@@ -23,25 +30,31 @@ io.on('connection', socket => {
   // Get new connections
   socket.on('join', ({ username, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, username, room });
-
     if (error) return callback(error);
 
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //Janeiro = 0!
+    let yyyy = today.getFullYear();
+    let fullDate = `${dd}/${mm}/${yyyy}`;
+
+    console.log(fullDate);
     socket.emit('message', {
       user: 'admin',
-      text: `${user.username}, welcome to the room ${user.room}`,
+      text: `${fullDate} - ${user.username}, welcome to the room ${user.room}`,
     });
-
+    socket.join(user.room);
     socket.broadcast.to(user.room).emit('message', {
       user: 'admin',
-      text: `${user.username}, has joined the room!`,
+      text: `${fullDate} -${user.username}, has joined the room!`,
     });
-
-    socket.join(user.room);
     callback();
   });
 
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
+    console.log(user);
+
     io.to(user.room).emit('message', {
       user: user.username,
       text: message,

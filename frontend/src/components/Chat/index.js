@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import queryString from 'query-string';
 import io from 'socket.io-client';
+import { useHistory } from 'react-router-dom';
 
 import './styles.css';
-// import { Container } from './styles';
+
+import InfoBar from '../InfoBar';
 
 let socket;
 
 export default function Chat({ location }) {
-  const [name, setName] = useState('');
+  let history = useHistory();
+  const [username, setUsername] = useState('');
   const [room, setRoom] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
@@ -16,18 +19,25 @@ export default function Chat({ location }) {
 
   // Creating user in room
   useEffect(() => {
-    const { name, room } = queryString.parse(location.search);
-
+    const { username, room } = queryString.parse(location.search);
+    if (+room < 1 || +room > 4 || +room.length > 1) {
+      history.push('/');
+    }
     socket = io(ENDPOINT);
-
-    setName(name);
+    setUsername(username);
     setRoom(room);
-
-    socket.emit('join', { name, room }, error => {
+    socket.emit('join', { username, room }, error => {
       if (error) {
         alert(error);
+        history.push('/');
       }
     });
+
+    // Leaving chat
+    return () => {
+      socket.emit('disconnect');
+      socket.off();
+    };
   }, [ENDPOINT, location.search]);
 
   // Saving user's message of the room
@@ -44,13 +54,13 @@ export default function Chat({ location }) {
       socket.emit('sendMessage', message, () => setMessage(''));
     }
   };
-
   console.log(message, messages);
 
   return (
     <div className='outerContainer'>
       <div className='container'>
-        <input
+        <InfoBar room={room} username={username} />
+        {/*<input
           type='text'
           value={message}
           onChange={event => {
@@ -59,7 +69,7 @@ export default function Chat({ location }) {
           onKeyPress={event =>
             event.key === 'Enter' ? sendMessage(event) : null
           }
-        />
+        />*/}
       </div>
     </div>
   );
