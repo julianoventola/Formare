@@ -5,7 +5,9 @@ import { useHistory } from 'react-router-dom';
 
 import './styles.css';
 
-import InfoBar from '../InfoBar';
+import InfoBar from '../ChatInfoBar';
+import Messages from '../ChatMessages';
+import Input from '../ChatInput';
 
 let socket;
 
@@ -45,6 +47,12 @@ export default function Chat({ location }) {
     socket.on('message', message => {
       setMessages([...messages, message]);
     });
+
+    // Leaving chat
+    return () => {
+      socket.emit('disconnect');
+      socket.off();
+    };
   }, [messages]);
 
   // Sending messages
@@ -54,22 +62,17 @@ export default function Chat({ location }) {
       socket.emit('sendMessage', message, () => setMessage(''));
     }
   };
-  console.log(message, messages);
 
   return (
     <div className='outerContainer'>
       <div className='container'>
         <InfoBar room={room} username={username} />
-        {/*<input
-          type='text'
-          value={message}
-          onChange={event => {
-            setMessage(event.target.value);
-          }}
-          onKeyPress={event =>
-            event.key === 'Enter' ? sendMessage(event) : null
-          }
-        />*/}
+        <Messages messages={messages} username={username} />
+        <Input
+          message={message}
+          setMessage={setMessage}
+          sendMessage={sendMessage}
+        />
       </div>
     </div>
   );

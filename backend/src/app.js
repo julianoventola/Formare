@@ -32,39 +32,52 @@ io.on('connection', socket => {
     const { error, user } = addUser({ id: socket.id, username, room });
     if (error) return callback(error);
 
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //Janeiro = 0!
-    let yyyy = today.getFullYear();
-    let fullDate = `${dd}/${mm}/${yyyy}`;
-
-    console.log(fullDate);
     socket.emit('message', {
       user: 'admin',
-      text: `${fullDate} - ${user.username}, welcome to the room ${user.room}`,
+      text: `${user.username}, Bem vindo à sala ${user.room}`,
     });
-    socket.join(user.room);
+
     socket.broadcast.to(user.room).emit('message', {
       user: 'admin',
-      text: `${fullDate} -${user.username}, has joined the room!`,
+      text: `${user.username}, entrou na sala!`,
     });
+    socket.join(user.room);
+
+    io.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    });
+
     callback();
   });
 
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
-    console.log(user);
 
+    // User message
     io.to(user.room).emit('message', {
       user: user.username,
       text: message,
     });
+
+    // Update users in room
+    io.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    });
+
     callback();
   });
 
   // When user leaves
   socket.on('disconnect', () => {
-    console.log('User had left us :(');
+    const user = removeUser(socket.id);
+    if (user) {
+      io.to(user.room).emit('message', {
+        user: 'admin',
+        text: `${user.username}, saiu da sala!`,
+      });
+    }
   });
 });
 
