@@ -21,19 +21,19 @@ app.use(router);
 
 io.on('connection', socket => {
   // Get new connections
-  socket.on('join', ({ name, room }, callback) => {
-    const { error, user } = addUser({ id: socket.id, name, room });
+  socket.on('join', ({ username, room }, callback) => {
+    const { error, user } = addUser({ id: socket.id, username, room });
 
     if (error) return callback(error);
 
     socket.emit('message', {
       user: 'admin',
-      text: `${user.name}, welcome to the room ${user.room}`,
+      text: `${user.username}, welcome to the room ${user.room}`,
     });
 
     socket.broadcast.to(user.room).emit('message', {
       user: 'admin',
-      text: `${user.name}, has joined the room!`,
+      text: `${user.username}, has joined the room!`,
     });
 
     socket.join(user.room);
@@ -43,7 +43,7 @@ io.on('connection', socket => {
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
     io.to(user.room).emit('message', {
-      user: user.name,
+      user: user.username,
       text: message,
     });
     callback();

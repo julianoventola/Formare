@@ -13,27 +13,23 @@ body {
   text-align: center;
   height: 100vh;
   align-items: center;
-  background-color: #1a1a1a;
+  background-color: #1a1a1d;
 }
 
 .joinInnerContainer {
   width: 20%;
 }
+
 .logo {
   margin-bottom: 30px;
 }
 
 .joinInput {
   border-radius: 5px;
-  padding: 1rem;
-  margin-top: 1rem;
+  padding: 15px 20px;
   width: 100%;
+  margin: 10px auto;
   font-size: 1.2rem;
-}
-
-.joinInput-error {
-  color: #ff8080;
-  font-size: 1rem;
 }
 
 .heading {
