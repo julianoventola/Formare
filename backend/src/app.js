@@ -4,6 +4,8 @@ const http = require('http');
 const cors = require('cors');
 const router = require('./routes');
 
+const MessageController = require('./app/controllers/MessageController');
+
 require('./database');
 
 // Room and USer Controller
@@ -34,7 +36,7 @@ io.on('connection', socket => {
 
     socket.emit('message', {
       user: 'admin',
-      text: `${user.username}, Bem vindo à sala ${user.room}`,
+      text: `${user.username}, bem vindo à sala ${user.room}`,
     });
 
     socket.broadcast.to(user.room).emit('message', {
@@ -53,7 +55,7 @@ io.on('connection', socket => {
 
   socket.on('sendMessage', (message, callback) => {
     const user = getUser(socket.id);
-
+    MessageController.store(user.username, message);
     // User message
     io.to(user.room).emit('message', {
       user: user.username,
