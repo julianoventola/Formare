@@ -1,6 +1,18 @@
 # Formare Chat - Desafio
 
 - Aplicação de chat em MERN Javascript stack
+
+- Requisitos atendidos:
+
+  - login de usuários
+  - identificação de usuários
+  - envios de mensagens
+  - data e hora em mensagens
+  - organização de mensagens e auto roll
+  - login de admin com auth
+  - filtros de mensagem por username, data(2020-08-18) e order(-1)
+  - delete das mensagens
+
 - Rotas:
 
   - / (GET) - Acesso a pagina inicial
