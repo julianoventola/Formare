@@ -21,7 +21,7 @@ export default function ChatAdminMessages() {
     } catch (error) {
       console.log(error);
     }
-  }, [messages]);
+  }, [messages, token]);
 
   const handleDelete = async id => {
     try {
