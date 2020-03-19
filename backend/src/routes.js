@@ -20,6 +20,6 @@ router.post('/admin/sessions', SessionController.store);
 router.use(authMiddleware);
 
 router.get('/admin/chat', MessageController.index);
-router.delete('/admin/chat', MessageController.delete);
+router.delete('/admin/chat/:id', MessageController.delete);
 
 module.exports = router;

@@ -1,11 +1,14 @@
 import React from 'react';
 
-// import { Container } from './styles';
+import './styles.css';
+import ChatAdminMessages from '../ChatAdminMessages';
 
 export default function ChatAdmin() {
   return (
     <div className='outerContainer'>
-      <h1 className='innerContainer'>Welcome Admin</h1>
+      <div className='innerContainer'>
+        <ChatAdminMessages />
+      </div>
     </div>
   );
 }

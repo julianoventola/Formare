@@ -1,5 +1,4 @@
 const Message = require('../models/Message');
-let Yup = require('yup');
 
 class MessageController {
   async store(username, message) {
@@ -55,14 +54,7 @@ class MessageController {
   }
 
   async delete(req, res) {
-    const schema = Yup.object().shape({
-      id: Yup.string().required(),
-    });
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
-    }
-
-    const { id } = req.body;
+    const { id } = req.params;
     await Message.deleteOne({ _id: id });
     return res.json({ ok: true });
   }
