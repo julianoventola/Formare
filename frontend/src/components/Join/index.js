@@ -21,6 +21,7 @@ export default function Join() {
               type='text'
               placeholde='Username'
               className='joinInput'
+              value={username}
               onChange={event => {
                 setUsername(event.target.value);
               }}
