@@ -11,14 +11,15 @@ export default function ChatAdminMessages() {
   const [messages, setMessages] = useState([]);
   const token = localStorage.getItem('app-token');
 
+  const loadMessages = async () => {
+    api.defaults.headers.Authorization = `Bearer ${token}`;
+    const response = await api.get('/admin/chat');
+    if (response) {
+      setMessages(response.data);
+    }
+  };
+
   useEffect(() => {
-    const loadMessages = async () => {
-      api.defaults.headers.Authorization = `Bearer ${token}`;
-      const response = await api.get('/admin/chat');
-      if (response) {
-        setMessages(response.data);
-      }
-    };
     try {
       loadMessages();
     } catch (error) {
@@ -30,6 +31,7 @@ export default function ChatAdminMessages() {
     try {
       api.defaults.headers.Authorization = `Bearer ${token}`;
       await api.delete(`/admin/chat/${id}`);
+      loadMessages();
     } catch (error) {
       console.log(error);
     }
