@@ -21,8 +21,11 @@
   - /admin/sessions (POST) - Criação de sessao e autenticação (apenas backend)
   - /admin/chat - (GET/DELETE) - Acesso as mensagens do chat (backend e frontend)
     - A rota de /admin/chat necessita de autenticação
-    - A rota de /admin/chat permite o GET, apenas no backend, com filtros
-      - filtros: por username, data(2020-08-18) e order(-1)
+      - filtros: por username, data(2020-12-30) e ordenação (crescente / decrescente)
+  - /admin/chat/participants (POST) - não necessita de body, retorna 117 nomes em json (apenas backend)
+    - A rota de /admin/chat/participants necessita de autenticação
+  - /admin/chat/rooms - (GET) - Balanceador de carga (apenas backend e ajustes no codigo para alterar valores!)
+    - A rota de /admin/chat/rooms necessita de autenticação
 
 - Como iniciar: yarn || npm install
 
